@@ -1,5 +1,5 @@
 #中序遍历，结果中如果有一个降序对，说明该两个node需交换；若有两个降序对，说明第一对的前一个node和第二对的后一个node需要交换。
-#
+#二叉搜索树的中序遍历是递增的
 class Solution:
     def __init__(self):
         self.res = []
