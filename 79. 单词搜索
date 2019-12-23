@@ -1,0 +1,18 @@
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        l,w = len(board),len(board[0])#行、列
+        #输入字符串长度
+        l_word = len(word)
+        def dfs(a,b,index,hel):
+            if a<0 or b<0 or a>=l or b>=w or board[a][b]!=word[index] or (a,b) in hel:
+                return False
+            elif board[a][b]==word[index] and index==len(word)-1:
+                return True
+            return dfs(a+1,b,index+1,hel+[(a,b)]) or dfs(a-1,b,index+1,hel+[(a,b)]) or dfs(a,b+1,index+1,hel+[(a,b)]) or dfs(a,b-1,index+1,hel+[(a,b)])
+        
+        for i in range(l):
+            for j in range(w):
+                if board[i][j] == word[0]:
+                    if dfs(i,j,0,[]):
+                        return True
+        return False
