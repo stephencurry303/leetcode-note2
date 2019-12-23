@@ -1,18 +1,46 @@
+from typing import List
+
 class Solution:
+    #         (x-1,y)
+    # (x,y-1) (x,y) (x,y+1)
+    #         (x+1,y)
+
+    directions = [(0, -1), (-1, 0), (0, 1), (1, 0)]#上右下左
+
     def exist(self, board: List[List[str]], word: str) -> bool:
-        l,w = len(board),len(board[0])#行、列
-        #输入字符串长度
-        l_word = len(word)
-        def dfs(a,b,index,hel):
-            if a<0 or b<0 or a>=l or b>=w or board[a][b]!=word[index] or (a,b) in hel:
-                return False
-            elif board[a][b]==word[index] and index==len(word)-1:
-                return True
-            return dfs(a+1,b,index+1,hel+[(a,b)]) or dfs(a-1,b,index+1,hel+[(a,b)]) or dfs(a,b+1,index+1,hel+[(a,b)]) or dfs(a,b-1,index+1,hel+[(a,b)])
-        
-        for i in range(l):
-            for j in range(w):
-                if board[i][j] == word[0]:
-                    if dfs(i,j,0,[]):
-                        return True
+        m = len(board)#行
+        if m == 0:
+            return False
+        n = len(board[0])#列
+        #m行n列的False标记
+        marked = [[False for _ in range(n)] for _ in range(m)]
+        for i in range(m):
+            for j in range(n):
+                #调用__search_word函数
+                # 对每一个格子都从头开始搜索
+                if self.__search_word(board, word, 0, i, j, marked, m, n):
+                    return True
         return False
+
+    def __search_word(self, board, word, index, start_x, start_y, marked, m, n):
+        # 先写递归终止条件
+        if index == len(word) - 1:
+            return board[start_x][start_y] == word[index]
+
+        # 中间匹配了，再继续搜索
+        if board[start_x][start_y] == word[index]:
+            # 先占住这个位置，搜索不成功的话，要释放掉
+            marked[start_x][start_y] = True
+            for direction in self.directions:
+                new_x = start_x + direction[0]
+                new_y = start_y + direction[1]
+                # 注意：如果这一次 search word 成功的话，就返回
+                if 0 <= new_x < m and 0 <= new_y < n and not marked[new_x][new_y] and \
+                self.__search_word(board, word,index + 1,new_x, new_y,marked, m, n):
+                    return True
+            marked[start_x][start_y] = False
+        return False
+
+
+
+
