@@ -1,0 +1,13 @@
+class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+        r, i, j, di, dj = [], 0, 0, 0, 1
+        if matrix != []:
+            for _ in range(len(matrix) * len(matrix[0])):#行数*列数
+                r.append(matrix[i][j])
+                matrix[i][j] = 0
+                if matrix[(i + di) % len(matrix)][(j + dj) % len(matrix[0])] == 0:
+                    di, dj = dj, -di
+                i += di
+                j += dj
+        return r
+        
